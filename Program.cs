@@ -1,97 +1,45 @@
 ﻿using Okta.Core;
 using Okta.Core.Clients;
 using Okta.Core.Models;
+using Polly;
+using Polly.Retry;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+// Testing note: This code interacts with the Okta API and requires valid credentials and network access to run successfully.
 
 namespace Okta.Tools.UserExporter
 {
     class Program
     {
+        static void Main(string[] args) {
 
-        static FileStream fsOutput = null;
-        static StreamWriter sw = null;
-
-        static void Main(string[] args)
-        {
-            string strFileName = ConfigurationManager.AppSettings["OutputFileName"];
-            string strOktaUrl = ConfigurationManager.AppSettings["OktaUrl"];
-            string strOktaApiKey = ConfigurationManager.AppSettings["OktaApiKey"];
-
-            if (string.IsNullOrEmpty(strFileName))
+            // Loop through args 
+            foreach (string arg in args)
             {
-                string strFileSuffix = DateTime.Now.ToString("yyyyMMdd-hhmmss");
-                strFileName = string.Format("OktaUsers_{0}.csv", strFileSuffix);
+                Console.WriteLine(arg);
             }
 
-            string strFilePath = strFileName;
+            // Override Date for Testing
+            //Common.Now_DTS = new DateTime(2025, 10, 22, 11, 54, 56);
 
-            try
-            {
-                if (!strFilePath.StartsWith(".\\"))
-                {
-                    strFilePath = string.Format(".\\{0}", strFilePath);
-                }
+            Common.Read_AppSettings();
 
-                fsOutput = new FileStream(strFilePath, FileMode.Create);
-                sw = new StreamWriter(fsOutput);
+            //Users.UsersMain().GetAwaiter().GetResult();
+            GroupsOnly.GroupsOnlyMain().GetAwaiter().GetResult();
+            //Groups.GroupsMain().GetAwaiter().GetResult();
+            //AppsOnly.AppsOnlyMain().GetAwaiter().GetResult();
+            //Apps.AppsMain().GetAwaiter().GetResult();
 
-                OktaClient oktaClient = new OktaClient(strOktaApiKey, new Uri(strOktaUrl));
-                UsersClient usersClient = oktaClient.GetUsersClient();
-                Uri nextPage = null;
-                PagedResults<User> users;
-                string headerLine = "Id,Login,Status,Created,Activated, Last Login Date, Last Updated Date, Password Changed Date, Status Changed, First Name,Last Name,Email,Secondary Email,Mobile Phone";
-                sw.WriteLine(headerLine);
-
-                do
-                {
-                    users = usersClient.GetList(pageSize: 200, nextPage: nextPage);
-                    
-                    
-                    foreach (var user in users.Results)
-                    {
-                        string line = string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\"", user.Id, user.Profile.Login, user.Status, user.Created, user.Activated, user.LastLogin, user.LastUpdated, user.PasswordChanged, user.StatusChanged, user.Profile.FirstName, user.Profile.LastName, user.Profile.Email, user.Profile.SecondaryEmail, user.Profile.MobilePhone);
-                        List<string> unmappedProperties = user.Profile.GetUnmappedPropertyNames();
-                        StringBuilder sb = new StringBuilder();
-                        foreach (string unmappedProperty in unmappedProperties)
-                        {
-                            string sPropValue = user.Profile.GetProperty(unmappedProperty);
-                            sPropValue = sPropValue.Replace("\r\n", "");
-                            sPropValue = sPropValue.Replace("\"", "\"\"");
-                            sb.Append(",\"");
-                            sb.Append(sPropValue);
-                            sb.Append("\"");
-                           
-                        }
-                        line += sb.ToString();
-                        sw.WriteLine(line);
-                        sw.Flush();
-
-                    }
-
-                    nextPage = users.NextPage;
-                }
-                while (!users.IsLastPage);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(string.Format("An error occurred: {0}", ex.ToString()));
-                Console.ReadLine();
-            }
-            finally
-            {
-                if (sw != null)
-                    sw.Close();
-
-                if (fsOutput != null)
-                    fsOutput.Close();
-            }
-
+            // Build JSON summary of created files
+            Build_JSON.BuildJsonMain().GetAwaiter().GetResult();
         }
+
+
     }
 }

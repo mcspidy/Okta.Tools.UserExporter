@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36616.10 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.Tools.UserExporter", "Okta.Tools.UserExporter.csproj", "{1BA1EF43-EC7C-46D4-81A9-5550EDD05CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.Tools.Update.SQL", "..\Okta.Tools.Update.SQL\Okta.Tools.Update.SQL.csproj", "{5EC9233C-C9CB-479C-81A0-BED98A19691C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Utils", "..\Common.Utils\Common.Utils.csproj", "{51B1C336-8803-4E2A-80EE-9A295333FD4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,19 @@ Global
 		{1BA1EF43-EC7C-46D4-81A9-5550EDD05CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BA1EF43-EC7C-46D4-81A9-5550EDD05CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BA1EF43-EC7C-46D4-81A9-5550EDD05CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC9233C-C9CB-479C-81A0-BED98A19691C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC9233C-C9CB-479C-81A0-BED98A19691C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC9233C-C9CB-479C-81A0-BED98A19691C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC9233C-C9CB-479C-81A0-BED98A19691C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B1C336-8803-4E2A-80EE-9A295333FD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B1C336-8803-4E2A-80EE-9A295333FD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B1C336-8803-4E2A-80EE-9A295333FD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B1C336-8803-4E2A-80EE-9A295333FD4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B167F777-E33F-4338-A8AD-6DC2AD192BD3}
 	EndGlobalSection
 EndGlobal
