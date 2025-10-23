@@ -9,9 +9,25 @@ using Newtonsoft.Json.Linq;
 
 namespace Okta.Tools.UserExporter
 {
+    /// <summary>
+    /// Utilities to export groups from Okta into CSV output.
+    /// </summary>
     public class GroupsOnly
     {
-        // Exports only Group Id and Group Name
+        /// <summary>
+        /// Exports Okta groups to a CSV file and returns an exit code.
+        /// </summary>
+        /// <remarks>
+        /// This method:
+        /// - Sets the output file via <see cref="Common.SetFile(string)"/>.
+        /// - Creates an <see cref="HttpClient"/> configured for the Okta API.
+        /// - Writes a CSV header row and then iterates all groups returned by
+        ///   <see cref="Common.GetAllPagesAsJArrayAsync(System.Net.Http.HttpClient, string)"/>.
+        /// - Extracts group fields, escapes each field with <see cref="Common.CsvEscape(object)"/>,
+        ///   and writes CSV rows.
+        /// The method returns 0 on success and 1 if an exception occurs.
+        /// </remarks>
+        /// <returns>Task resolving to 0 on success, 1 on error.</returns>
         public static async Task<int> GroupsOnlyMain()
         {
             Common.SetFile(Common.OutputGroupsOnlyFileName);

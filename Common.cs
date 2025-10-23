@@ -101,13 +101,27 @@ namespace Okta.Tools.UserExporter
             return 0;
         }
 
+        /// <summary>
+        /// Sets <see cref="FilePath"/> using <see cref="File_Utils.SetFile(string,string)"/> and returns the resulting path.
+        /// </summary>
+        /// <param name="value">Filename or key used to compute the full path.</param>
+        /// <returns>The computed file path.</returns>
         public static string SetFile(string value)
         {
             FilePath = File_Utils.SetFile(value, ConfiguredFolder);
-            
+
             return FilePath;
         }
 
+        /// <summary>
+        /// Escapes <paramref name="value"/> for inclusion in a CSV field.
+        /// - Null returns an empty quoted field: <c>""</c>.
+        /// - <see cref="DateTime"/> values are formatted using the round-trip ("o") format.
+        /// - Other values are converted using <see cref="Convert.ToString(object,System.IFormatProvider)"/>.
+        /// Newlines are replaced with spaces and double quotes are doubled. The result is wrapped in double quotes.
+        /// </summary>
+        /// <param name="value">The value to escape (may be string, DateTime, JToken, etc.).</param>
+        /// <returns>CSV-safe quoted string.</returns>
         public static string CsvEscape(object value)
         {
             if (value == null) return "\"\"";
@@ -292,7 +306,14 @@ namespace Okta.Tools.UserExporter
             return null;
         }
 
-        // Fetch all pages from an Okta collection endpoint that uses Link headers for pagination, and aggregate into a single JArray
+        /// <summary>
+        /// Fetches all pages from an Okta collection endpoint and aggregates the results into a single <see cref="JArray"/>.
+        /// </summary>
+        /// <param name="http">Configured <see cref="HttpClient"/> to use for requests.</param>
+        /// <param name="relativeOrAbsoluteUrl">Relative or absolute URL to the collection endpoint.</param>
+        /// <param name="cancellationToken">Optional cancellation token.</param>
+        /// <returns>A <see cref="Task{JArray}"/> containing all items across pages.</returns>
+        /// <exception cref="HttpRequestException">If a non-success status code is returned (except the method allows 404 to surface for visibility).</exception>
         public static async Task<JArray> GetAllPagesAsJArrayAsync(HttpClient http, string relativeOrAbsoluteUrl, CancellationToken cancellationToken = default(CancellationToken))
         {
             var aggregate = new JArray();
