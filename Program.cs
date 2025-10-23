@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 // Testing note: This code interacts with the Okta API and requires valid credentials and network access to run successfully.
 
@@ -30,11 +31,11 @@ namespace Okta.Tools.UserExporter
 
             Common.Read_AppSettings();
 
-            //Users.UsersMain().GetAwaiter().GetResult();
+            Users.UsersMain().GetAwaiter().GetResult();
             GroupsOnly.GroupsOnlyMain().GetAwaiter().GetResult();
-            //Groups.GroupsMain().GetAwaiter().GetResult();
-            //AppsOnly.AppsOnlyMain().GetAwaiter().GetResult();
-            //Apps.AppsMain().GetAwaiter().GetResult();
+            Groups.GroupsMain().GetAwaiter().GetResult();
+            AppsOnly.AppsOnlyMain().GetAwaiter().GetResult();
+            Apps.AppsMain().GetAwaiter().GetResult();
 
             // Build JSON summary of created files
             Build_JSON.BuildJsonMain().GetAwaiter().GetResult();
