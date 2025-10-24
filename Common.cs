@@ -28,6 +28,7 @@ namespace Okta.Tools.UserExporter
         public static string OutputJsonFileName { get; private set; } = string.Empty;
         private static string ConfiguredFolder { get; set; } = string.Empty;
         public static string FilePath { get; private set; } = string.Empty;
+        public static string OktaConnect { get; private set; } = string.Empty;
         public static string OktaUrl { get; private set; } = string.Empty;
         public static string OktaApiKey { get; private set; } = string.Empty;
         public static int RetryCount { get; private set; } = 0;
@@ -70,9 +71,24 @@ namespace Okta.Tools.UserExporter
             // Determine the folder path from configuration if provided; otherwise use current directory
             ConfiguredFolder = ConfigurationManager.AppSettings["OutputFolderPath"] ?? string.Empty;
 
-            OktaUrl = ConfigurationManager.AppSettings["OktaUrl"];
-            OktaApiKey = Environment.GetEnvironmentVariable("OKTA_API_KEY")
-                                 ?? ConfigurationManager.AppSettings["OktaApiKey"];
+            OktaConnect = Environment.GetEnvironmentVariable("OKTA_CONNECT")
+                ?? ConfigurationManager.AppSettings["OktaConnect"] ?? string.Empty;
+            if (JsonFileReader.TryGetValue(OktaConnect, "OktaUrl", out string roles, defaultValue: "none"))
+            {
+                OktaUrl = JsonFileReader.GetValue(OktaConnect, "OktaUrl", null)
+                    ?? Environment.GetEnvironmentVariable("OKTA_URL_KEY") 
+                    ?? ConfigurationManager.AppSettings["OktaUrl"];
+                OktaApiKey = JsonFileReader.GetValue(OktaConnect, "OktaApiKey", null)
+                    ?? Environment.GetEnvironmentVariable("OKTA_API_KEY")
+                    ?? ConfigurationManager.AppSettings["OktaApiKey"];
+            }
+            else
+            {
+                OktaUrl = Environment.GetEnvironmentVariable("OKTA_URL_KEY")
+                    ?? ConfigurationManager.AppSettings["OktaUrl"];
+                OktaApiKey = Environment.GetEnvironmentVariable("OKTA_API_KEY")
+                    ?? ConfigurationManager.AppSettings["OktaApiKey"];
+            }
             if (string.IsNullOrEmpty(OktaApiKey))
             {
                 Console.Error.WriteLine("Okta API key not set. Set environment variable OKTA_API_KEY or AppSettings:OktaApiKey.");

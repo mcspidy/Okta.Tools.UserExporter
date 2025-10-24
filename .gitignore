@@ -24,9 +24,16 @@ bld/
 !bin/Okta.Tools.UserExporter.exe.config
 !bin/*.dll
 [Oo]bj/
+bin/[Dd]ebug
+bin/[Rr]elease
+obj/[Dd]ebug
+obj/[Rr]elease
 
 # Visual Studio 2015 cache/options directory
 .vs/
+.vs/Common.Utils/
+.vs/CopilotSnapshots/
+
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 

@@ -1,0 +1,4 @@
+{
+  "OktaUrl": "https://[your_organization].okta.com",
+  "OktaApiKey": "[Your Okta API Token]"
+}
